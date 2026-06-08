@@ -1,0 +1,5 @@
+bin/
+config.yaml
+config.txt
+gtfs_subway.zip
+gtfs_supplemented.zip

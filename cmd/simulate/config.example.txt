@@ -1,0 +1,22 @@
+# Example config for the host simulator (go run ./cmd/simulate).
+# Copy to config.txt (gitignored). The simulator needs no WiFi credentials.
+
+# Display dimensions (pixels)
+width: 64
+height: 32
+
+# Arrivals service (the cmd/serve backend)
+host: localhost
+port: 8080
+
+# Stops: space-separated stop IDs, each with an optional route filter after ":"
+# (a comma-separated list of tokens):
+#   bare route (e.g. G)  -> pin:  always shown, "No service" when not arriving
+#   !route     (e.g. !R) -> mute: never shown, even when arriving
+# No tokens shows every arriving route. e.g. "A42N:G" pins G at A42N.
+stops: R30N R30S A41N A41S A42N:G A42S:G 233N 233S
+
+# Timing
+poll_interval: 30s      # how often to fetch arrivals
+phase_interval: 3s      # time per text phase (stop name -> route name -> headsign)
+group_interval: 9s      # time per arrival-group page

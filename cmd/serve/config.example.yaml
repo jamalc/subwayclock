@@ -1,0 +1,12 @@
+# Example config for the arrivals service (cmd/serve).
+# Copy to config.yaml (gitignored) and fill in your values.
+
+# MTA real-time feed API key — get one at https://api.mta.info/
+mta_api_key: YOUR_MTA_API_KEY
+
+# Paths to the GTFS static zip files (download them with: go run ./cmd/fetch)
+gtfs_subway: "gtfs_subway.zip"
+gtfs_supplemented: "gtfs_supplemented.zip"
+
+# How often to re-fetch the realtime feeds (seconds)
+realtime_interval: 30

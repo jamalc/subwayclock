@@ -1,0 +1,31 @@
+# Example config for the on-device clock firmware.
+# Copy to config.txt (gitignored) and fill in your values. config.txt is
+# embedded into the firmware at build time (the device has no filesystem).
+
+# --- WiFi (device only) ---
+ssid: YOUR_WIFI_SSID
+passphrase: YOUR_WIFI_PASSWORD
+
+# --- Display dimensions (pixels) ---
+width: 64
+height: 32
+
+# --- Arrivals service (the cmd/serve backend) ---
+host: 192.168.1.50      # IP or hostname of the machine running cmd/serve
+port: 8080
+
+# --- Stops ---
+# Space-separated stop IDs. Each stop may take an optional route filter after
+# ":", a comma-separated list of tokens:
+#   bare route (e.g. Q)  -> pin:  always shown, "No service" when not arriving
+#   !route     (e.g. !R) -> mute: never shown, even when arriving
+# With no tokens, every arriving route is shown. Examples:
+#   R30N         every route arriving at R30N
+#   R30N:Q       all arrivals, plus "No service" for Q when it's down
+#   R30N:Q,!R    always Q (No service if absent), hide R, show the rest
+stops: R30N A41N A42N 233N
+
+# --- Timing ---
+poll_interval: 30s      # how often to fetch arrivals
+phase_interval: 3s      # time per text phase (stop name -> route name -> headsign)
+group_interval: 9s      # time per arrival-group page

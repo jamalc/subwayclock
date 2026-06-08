@@ -1,0 +1,7 @@
+# Example config for the on-device gravity stress firmware.
+# Copy to config.txt (gitignored). It is embedded into the firmware at build
+# time. Gravity only needs the panel dimensions.
+
+# Display dimensions (pixels)
+width: 64
+height: 32

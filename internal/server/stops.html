@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MTA Stop Lookup</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; font-size: 15px; background: #f5f5f5; color: #111; padding: 2rem 1rem; }
+  h1 { font-size: 1.25rem; font-weight: 500; margin-bottom: 1.5rem; }
+  input { width: 100%; max-width: 520px; padding: 0.6rem 0.8rem; font-size: 15px; border: 1px solid #ccc; border-radius: 6px; outline: none; }
+  input:focus { border-color: #555; }
+  #results { margin-top: 1rem; max-width: 520px; }
+  .stop { background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 0.5rem; }
+  .stop-name { font-weight: 500; margin-bottom: 0.4rem; }
+  .stop-meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .stop-ids { font-size: 13px; color: #555; font-family: monospace; }
+  .stop-id { display: inline-block; background: #f0f0f0; border-radius: 4px; padding: 1px 6px; margin-right: 4px; }
+  .stop-routes { display: flex; gap: 4px; flex-wrap: wrap; }
+  .route-badge { display: inline-block; font-size: 12px; font-weight: 500; font-family: monospace; background: #222; color: white; border-radius: 3px; padding: 1px 6px; }
+  .hint { font-size: 13px; color: #888; margin-top: 0.5rem; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a1a; color: #eee; }
+    input { background: #2a2a2a; border-color: #444; color: #eee; }
+    input:focus { border-color: #888; }
+    .stop { background: #2a2a2a; border-color: #3a3a3a; }
+    .stop-ids { color: #aaa; }
+    .stop-id { background: #3a3a3a; }
+    .route-badge { background: #444; }
+    .hint { color: #666; }
+  }
+</style>
+</head>
+<body>
+<h1>MTA Stop Lookup</h1>
+<input type="search" id="q" placeholder="Search stops — e.g. atlantic, franklin, times sq" autocomplete="off" autofocus>
+<div id="results"></div>
+<script>
+  const input = document.getElementById('q');
+  const results = document.getElementById('results');
+  let timer;
+
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    const q = input.value.trim();
+    if (!q) { results.innerHTML = ''; return; }
+    timer = setTimeout(() => search(q), 200);
+  });
+
+  async function search(q) {
+    const res = await fetch('/stops/search?q=' + encodeURIComponent(q));
+    const stops = await res.json();
+    if (!stops.length) {
+      results.innerHTML = '<p class="hint">No stops found.</p>';
+      return;
+    }
+    results.innerHTML = stops.map(s => `
+      <div class="stop">
+        <div class="stop-name">${s.name}</div>
+        <div class="stop-meta">
+          <div class="stop-ids">
+            <span class="stop-id">${s.id}N</span>
+            <span class="stop-id">${s.id}S</span>
+          </div>
+          <div class="stop-routes">
+            ${(s.routes || []).map(r => `<span class="route-badge">${r}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+</script>
+</body>
+</html>
